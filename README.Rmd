@@ -194,13 +194,16 @@ Works well with the tidyverse
 
 ```{r}
 library(dplyr)
+tibble(prefio)
+
 tibble(prefio) |> 
   count(prefio, sort = TRUE)
 
 letter_prefs <- tibble(
   prefio, 
-  timestamp = as.POSIXct(rnorm(100, sd = 1e5), origin = Sys.Date())
+  timestamp = as.POSIXct(rnorm(100, sd = 1e5), origin = "2024-03-21")
 )
+letter_prefs
 ```
 
 Can do useful operations/calculations on the vector...
@@ -211,12 +214,17 @@ Can do useful operations/calculations on the vector...
 letter_prefs <- letter_prefs |> 
   mutate(fp = pref_fp(prefio), tcp = pref_tcp(prefio))
 
+letter_prefs
+
+# Count most common first preferences
 letter_prefs |> 
   count(fp, sort = TRUE)
 
+# Count most frequent two candidate preferences
 letter_prefs |> 
   count(tcp, sort = TRUE)
 
+# Count the interaction between fp and tcp, to see how they compare
 letter_prefs |> 
   count(fp, tcp, sort = TRUE)
 ```

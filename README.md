@@ -279,6 +279,25 @@ library(dplyr)
     ##     intersect, setdiff, setequal, union
 
 ``` r
+tibble(prefio)
+```
+
+    ## # A tibble: 100 x 1
+    ##      prefio
+    ##    <prefio>
+    ##  1        F
+    ##  2    B<E<D
+    ##  3      I<J
+    ##  4        A
+    ##  5        F
+    ##  6    A<F<E
+    ##  7    B<G<H
+    ##  8      F<H
+    ##  9      H<A
+    ## 10        A
+    ## # i 90 more rows
+
+``` r
 tibble(prefio) |> 
   count(prefio, sort = TRUE)
 ```
@@ -301,9 +320,25 @@ tibble(prefio) |>
 ``` r
 letter_prefs <- tibble(
   prefio, 
-  timestamp = as.POSIXct(rnorm(100, sd = 1e5), origin = Sys.Date())
+  timestamp = as.POSIXct(rnorm(100, sd = 1e5), origin = "2024-03-21")
 )
+letter_prefs
 ```
+
+    ## # A tibble: 100 x 2
+    ##      prefio timestamp          
+    ##    <prefio> <dttm>             
+    ##  1        F 2024-03-21 11:18:47
+    ##  2    B<E<D 2024-03-21 01:40:12
+    ##  3      I<J 2024-03-22 15:31:41
+    ##  4        A 2024-03-20 17:20:55
+    ##  5        F 2024-03-20 22:54:24
+    ##  6    A<F<E 2024-03-21 09:04:03
+    ##  7    B<G<H 2024-03-23 02:01:30
+    ##  8      F<H 2024-03-22 20:18:13
+    ##  9      H<A 2024-03-22 13:46:32
+    ## 10        A 2024-03-22 11:34:57
+    ## # i 90 more rows
 
 Can do useful operations/calculations on the vector…
 
@@ -314,6 +349,26 @@ preference between the two most frequent first preferences.
 letter_prefs <- letter_prefs |> 
   mutate(fp = pref_fp(prefio), tcp = pref_tcp(prefio))
 
+letter_prefs
+```
+
+    ## # A tibble: 100 x 4
+    ##      prefio timestamp           fp    tcp  
+    ##    <prefio> <dttm>              <fct> <fct>
+    ##  1        F 2024-03-21 11:18:47 F     <NA> 
+    ##  2    B<E<D 2024-03-21 01:40:12 B     <NA> 
+    ##  3      I<J 2024-03-22 15:31:41 I     I    
+    ##  4        A 2024-03-20 17:20:55 A     A    
+    ##  5        F 2024-03-20 22:54:24 F     <NA> 
+    ##  6    A<F<E 2024-03-21 09:04:03 A     A    
+    ##  7    B<G<H 2024-03-23 02:01:30 B     <NA> 
+    ##  8      F<H 2024-03-22 20:18:13 F     <NA> 
+    ##  9      H<A 2024-03-22 13:46:32 H     A    
+    ## 10        A 2024-03-22 11:34:57 A     A    
+    ## # i 90 more rows
+
+``` r
+# Count most common first preferences
 letter_prefs |> 
   count(fp, sort = TRUE)
 ```
@@ -333,6 +388,7 @@ letter_prefs |>
     ## 10 H         6
 
 ``` r
+# Count most frequent two candidate preferences
 letter_prefs |> 
   count(tcp, sort = TRUE)
 ```
@@ -345,6 +401,7 @@ letter_prefs |>
     ## 3 A        18
 
 ``` r
+# Count the interaction between fp and tcp, to see how they compare
 letter_prefs |> 
   count(fp, tcp, sort = TRUE)
 ```
