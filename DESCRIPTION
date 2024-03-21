@@ -25,7 +25,8 @@ Imports:
     dplyr,
     magrittr,
     tidyr,
-    stats
+    stats,
+    vctrs
 Suggests:
     covr,
     testthat (>= 3.0.0)

@@ -173,14 +173,17 @@ our `prefs` from earlier:
 write_preflib(prefs)
 ```
 
-    ## Warning in write_preflib(prefs): Missing `title`: the PrefLib format requires a title to be specified. Using `NA`.
+    ## Warning in write_preflib(prefs): Missing `title`: the PrefLib format requires a
+    ## title to be specified. Using `NA`.
 
-    ## Warning in write_preflib(prefs): Missing `publication_date`, using today's date(2023-06-14).
+    ## Warning in write_preflib(prefs): Missing `publication_date`, using today's
+    ## date(2024-03-21).
 
-    ## Warning in write_preflib(prefs): Missing `modification_date`, using today's date(2023-06-14).
+    ## Warning in write_preflib(prefs): Missing `modification_date`, using today's
+    ## date(2024-03-21).
 
-    ## Warning in write_preflib(prefs): Missing `modification_type`: the PrefLib format requires this to be specified. Using
-    ## `NA`.
+    ## Warning in write_preflib(prefs): Missing `modification_type`: the PrefLib
+    ## format requires this to be specified. Using `NA`.
 
     ## # FILE NAME: NA
     ## # TITLE: NA
@@ -189,8 +192,8 @@ write_preflib(prefs)
     ## # MODIFICATION TYPE: NA
     ## # RELATES TO: 
     ## # RELATED FILES: 
-    ## # PUBLICATION DATE: 2023-06-14
-    ## # MODIFICATION DATE: 2023-06-14
+    ## # PUBLICATION DATE: 2024-03-21
+    ## # MODIFICATION DATE: 2024-03-21
     ## # NUMBER ALTERNATIVES: 3
     ## # NUMBER VOTERS: 3
     ## # NUMBER UNIQUE ORDERS: 3
@@ -206,6 +209,165 @@ field which is required by the official PrefLib format, but may not be
 necessary for internal use-cases. If your goal is to publish some data
 to PrefLib, these warnings must be resolved.
 
+## vctrs prototype
+
+Construct a prefio vector with `new_prefio()`
+
+``` r
+lengths <- sample(1:3, size = 100, replace = TRUE, prob = c(0.5, 0.2, 0.3))
+pref <- lapply(lengths, function(n) sample(1:10, size = n))
+
+prefio <- new_prefio(
+  pref,
+  levels = letters[1:10]
+)
+
+prefio
+```
+
+    ## <prefio[100]>
+    ##   [1] d     b<h   h     i<h<c i<h<g c<b<g e<d<j j<i   h     a     e<h   i<b<e
+    ##  [13] d     d<h   j<f   g<f<d f     j<g<d j<e   h<f<c d     e     f     c    
+    ##  [25] a<c   g     a<b<f d<c   f     h     a     d     d     d     j     i    
+    ##  [37] b     j     h<a<d h<b   g<b<c f<h   h<f<e j<c   a     d<j<g d     b<e  
+    ##  [49] d<b<g b     b<h<g e     a     i<c<e j     d<h<e f<e   g<i<e a     h<c  
+    ##  [61] a<e   d     g     d     j<e   h<g<a g     d     a<h   f     i<a<d d    
+    ##  [73] b<i   d<c   c     c<j<f c     e     e     j     c     c     g     b<g<j
+    ##  [85] b<g<f i     i     j<h<e i     d     g<c<f g     b     e     j     d<b<i
+    ##  [97] b<a<e b     f<a<e g<e
+
+Obtain all options and change the labelling by modifying the levels
+
+``` r
+levels(prefio)
+```
+
+    ##  [1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
+
+``` r
+levels(prefio) <- LETTERS[1:10]
+prefio
+```
+
+    ## <prefio[100]>
+    ##   [1] D     B<H   H     I<H<C I<H<G C<B<G E<D<J J<I   H     A     E<H   I<B<E
+    ##  [13] D     D<H   J<F   G<F<D F     J<G<D J<E   H<F<C D     E     F     C    
+    ##  [25] A<C   G     A<B<F D<C   F     H     A     D     D     D     J     I    
+    ##  [37] B     J     H<A<D H<B   G<B<C F<H   H<F<E J<C   A     D<J<G D     B<E  
+    ##  [49] D<B<G B     B<H<G E     A     I<C<E J     D<H<E F<E   G<I<E A     H<C  
+    ##  [61] A<E   D     G     D     J<E   H<G<A G     D     A<H   F     I<A<D D    
+    ##  [73] B<I   D<C   C     C<J<F C     E     E     J     C     C     G     B<G<J
+    ##  [85] B<G<F I     I     J<H<E I     D     G<C<F G     B     E     J     D<B<I
+    ##  [97] B<A<E B     F<A<E G<E
+
+Works well with the tidyverse
+
+``` r
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+tibble(prefio) |> 
+  count(prefio, sort = TRUE)
+```
+
+    ## # A tibble: 56 x 2
+    ##      prefio     n
+    ##    <prefio> <int>
+    ##  1        D    12
+    ##  2        A     5
+    ##  3        E     5
+    ##  4        C     5
+    ##  5        G     5
+    ##  6        J     5
+    ##  7        F     4
+    ##  8        I     4
+    ##  9        B     4
+    ## 10        H     3
+    ## # i 46 more rows
+
+``` r
+letter_prefs <- tibble(
+  prefio, 
+  timestamp = as.POSIXct(rnorm(100, sd = 1e5), origin = Sys.Date())
+)
+```
+
+Can do useful operations/calculations on the vector…
+
+`pref_fp()` obtains the first preference, and `pref_tcp()` obtains the
+preference between the two most frequent first preferences.
+
+``` r
+letter_prefs <- letter_prefs |> 
+  mutate(fp = pref_fp(prefio), tcp = pref_tcp(prefio))
+
+letter_prefs |> 
+  count(fp, sort = TRUE)
+```
+
+    ## # A tibble: 10 x 2
+    ##    fp        n
+    ##    <fct> <int>
+    ##  1 D        19
+    ##  2 J        12
+    ##  3 B        11
+    ##  4 G        10
+    ##  5 A         9
+    ##  6 H         9
+    ##  7 I         9
+    ##  8 C         7
+    ##  9 E         7
+    ## 10 F         7
+
+``` r
+letter_prefs |> 
+  count(tcp, sort = TRUE)
+```
+
+    ## # A tibble: 3 x 2
+    ##   tcp       n
+    ##   <fct> <int>
+    ## 1 <NA>     63
+    ## 2 D        23
+    ## 3 J        14
+
+``` r
+letter_prefs |> 
+  count(fp, tcp, sort = TRUE)
+```
+
+    ## # A tibble: 16 x 3
+    ##    fp    tcp       n
+    ##    <fct> <fct> <int>
+    ##  1 D     D        19
+    ##  2 J     J        12
+    ##  3 B     <NA>     10
+    ##  4 A     <NA>      9
+    ##  5 G     <NA>      9
+    ##  6 H     <NA>      8
+    ##  7 I     <NA>      8
+    ##  8 F     <NA>      7
+    ##  9 C     <NA>      6
+    ## 10 E     <NA>      6
+    ## 11 B     J         1
+    ## 12 C     J         1
+    ## 13 E     D         1
+    ## 14 G     D         1
+    ## 15 H     D         1
+    ## 16 I     D         1
+
 ## Projects using **prefio**
 
 The [New South Wales Legislative Assembly Election
@@ -218,7 +380,8 @@ The R package
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-Bennett2007" class="csl-entry">
 

@@ -11,3 +11,5 @@
 ^docs$
 ^pkgdown$
 ^readme.bib$
+^.*\.Rproj$
+^\.Rproj\.user$

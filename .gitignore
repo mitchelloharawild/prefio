@@ -54,3 +54,4 @@ docs/
 # Ignore html preview of README
 README.html
 docs
+.Rproj.user
