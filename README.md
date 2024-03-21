@@ -214,6 +214,7 @@ to PrefLib, these warnings must be resolved.
 Construct a prefio vector with `new_prefio()`
 
 ``` r
+set.seed(5)
 lengths <- sample(1:3, size = 100, replace = TRUE, prob = c(0.5, 0.2, 0.3))
 pref <- lapply(lengths, function(n) sample(1:10, size = n))
 
@@ -226,15 +227,15 @@ prefio
 ```
 
     ## <prefio[100]>
-    ##   [1] d     b<h   h     i<h<c i<h<g c<b<g e<d<j j<i   h     a     e<h   i<b<e
-    ##  [13] d     d<h   j<f   g<f<d f     j<g<d j<e   h<f<c d     e     f     c    
-    ##  [25] a<c   g     a<b<f d<c   f     h     a     d     d     d     j     i    
-    ##  [37] b     j     h<a<d h<b   g<b<c f<h   h<f<e j<c   a     d<j<g d     b<e  
-    ##  [49] d<b<g b     b<h<g e     a     i<c<e j     d<h<e f<e   g<i<e a     h<c  
-    ##  [61] a<e   d     g     d     j<e   h<g<a g     d     a<h   f     i<a<d d    
-    ##  [73] b<i   d<c   c     c<j<f c     e     e     j     c     c     g     b<g<j
-    ##  [85] b<g<f i     i     j<h<e i     d     g<c<f g     b     e     j     d<b<i
-    ##  [97] b<a<e b     f<a<e g<e
+    ##   [1] f     b<e<d i<j   a     f     a<f<e b<g<h f<h   h<a   a     d     i    
+    ##  [13] g     d<e<g j     g     c     i<j   j<g<i e<i   j<d   j<c<a b     f    
+    ##  [25] d     h     f     e<h   b     c<j   e     c     c     c     g     f    
+    ##  [37] c<i<d i<d<j e     d     i<f   e     e<a   j<g<a i<j   a<h<g a<h<f i    
+    ##  [49] b<j<h h<b<d h     c<j<h a<f   b<j   b<c   i     c     a     i     i    
+    ##  [61] e<h<b e     i<d   g<i   b<a   b<j   a<c   g     a<j   i<b   j<e   f<b<g
+    ##  [73] j     g<j   g     e<g   a     g<h<b h     d     b<f   d<i   d     d    
+    ##  [85] h     e     b<d   g<i<d g     a<g<e j<g<a f     c     i     f     i<j  
+    ##  [97] g     a<g<b f     j
 
 Obtain all options and change the labelling by modifying the levels
 
@@ -250,15 +251,15 @@ prefio
 ```
 
     ## <prefio[100]>
-    ##   [1] D     B<H   H     I<H<C I<H<G C<B<G E<D<J J<I   H     A     E<H   I<B<E
-    ##  [13] D     D<H   J<F   G<F<D F     J<G<D J<E   H<F<C D     E     F     C    
-    ##  [25] A<C   G     A<B<F D<C   F     H     A     D     D     D     J     I    
-    ##  [37] B     J     H<A<D H<B   G<B<C F<H   H<F<E J<C   A     D<J<G D     B<E  
-    ##  [49] D<B<G B     B<H<G E     A     I<C<E J     D<H<E F<E   G<I<E A     H<C  
-    ##  [61] A<E   D     G     D     J<E   H<G<A G     D     A<H   F     I<A<D D    
-    ##  [73] B<I   D<C   C     C<J<F C     E     E     J     C     C     G     B<G<J
-    ##  [85] B<G<F I     I     J<H<E I     D     G<C<F G     B     E     J     D<B<I
-    ##  [97] B<A<E B     F<A<E G<E
+    ##   [1] F     B<E<D I<J   A     F     A<F<E B<G<H F<H   H<A   A     D     I    
+    ##  [13] G     D<E<G J     G     C     I<J   J<G<I E<I   J<D   J<C<A B     F    
+    ##  [25] D     H     F     E<H   B     C<J   E     C     C     C     G     F    
+    ##  [37] C<I<D I<D<J E     D     I<F   E     E<A   J<G<A I<J   A<H<G A<H<F I    
+    ##  [49] B<J<H H<B<D H     C<J<H A<F   B<J   B<C   I     C     A     I     I    
+    ##  [61] E<H<B E     I<D   G<I   B<A   B<J   A<C   G     A<J   I<B   J<E   F<B<G
+    ##  [73] J     G<J   G     E<G   A     G<H<B H     D     B<F   D<I   D     D    
+    ##  [85] H     E     B<D   G<I<D G     A<G<E J<G<A F     C     I     F     I<J  
+    ##  [97] G     A<G<B F     J
 
 Works well with the tidyverse
 
@@ -282,20 +283,20 @@ tibble(prefio) |>
   count(prefio, sort = TRUE)
 ```
 
-    ## # A tibble: 56 x 2
+    ## # A tibble: 54 x 2
     ##      prefio     n
     ##    <prefio> <int>
-    ##  1        D    12
-    ##  2        A     5
-    ##  3        E     5
-    ##  4        C     5
-    ##  5        G     5
-    ##  6        J     5
-    ##  7        F     4
-    ##  8        I     4
-    ##  9        B     4
-    ## 10        H     3
-    ## # i 46 more rows
+    ##  1        F     8
+    ##  2        G     7
+    ##  3        D     6
+    ##  4        I     6
+    ##  5        C     6
+    ##  6        E     5
+    ##  7      I<J     4
+    ##  8        A     4
+    ##  9        H     4
+    ## 10        J     3
+    ## # i 44 more rows
 
 ``` r
 letter_prefs <- tibble(
@@ -320,16 +321,16 @@ letter_prefs |>
     ## # A tibble: 10 x 2
     ##    fp        n
     ##    <fct> <int>
-    ##  1 D        19
-    ##  2 J        12
+    ##  1 I        14
+    ##  2 A        12
     ##  3 B        11
-    ##  4 G        10
-    ##  5 A         9
-    ##  6 H         9
-    ##  7 I         9
-    ##  8 C         7
-    ##  9 E         7
-    ## 10 F         7
+    ##  4 G        11
+    ##  5 E        10
+    ##  6 F        10
+    ##  7 C         9
+    ##  8 J         9
+    ##  9 D         8
+    ## 10 H         6
 
 ``` r
 letter_prefs |> 
@@ -339,34 +340,37 @@ letter_prefs |>
     ## # A tibble: 3 x 2
     ##   tcp       n
     ##   <fct> <int>
-    ## 1 <NA>     63
-    ## 2 D        23
-    ## 3 J        14
+    ## 1 <NA>     62
+    ## 2 I        20
+    ## 3 A        18
 
 ``` r
 letter_prefs |> 
   count(fp, tcp, sort = TRUE)
 ```
 
-    ## # A tibble: 16 x 3
+    ## # A tibble: 19 x 3
     ##    fp    tcp       n
     ##    <fct> <fct> <int>
-    ##  1 D     D        19
-    ##  2 J     J        12
+    ##  1 I     I        14
+    ##  2 A     A        12
     ##  3 B     <NA>     10
-    ##  4 A     <NA>      9
+    ##  4 F     <NA>     10
     ##  5 G     <NA>      9
-    ##  6 H     <NA>      8
-    ##  7 I     <NA>      8
-    ##  8 F     <NA>      7
-    ##  9 C     <NA>      6
-    ## 10 E     <NA>      6
-    ## 11 B     J         1
-    ## 12 C     J         1
-    ## 13 E     D         1
-    ## 14 G     D         1
-    ## 15 H     D         1
-    ## 16 I     D         1
+    ##  6 C     <NA>      8
+    ##  7 E     <NA>      8
+    ##  8 D     <NA>      7
+    ##  9 H     <NA>      5
+    ## 10 J     <NA>      5
+    ## 11 J     A         3
+    ## 12 G     I         2
+    ## 13 B     A         1
+    ## 14 C     I         1
+    ## 15 D     I         1
+    ## 16 E     A         1
+    ## 17 E     I         1
+    ## 18 H     A         1
+    ## 19 J     I         1
 
 ## Projects using **prefio**
 
